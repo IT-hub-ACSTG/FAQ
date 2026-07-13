@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procédure IT</title>
+
+<style>
+    .example-separator {
+        margin: 25px 0;
+
+        font-size: 0.95rem;
+        color: #666;
+
+        text-align: center;
+
+        position: relative;
+    }
+
+    /* ligne avant + après */
+    .example-separator::before,
+    .example-separator::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 30%;
+        height: 1px;
+        background: rgba(0,0,0,0.15);
+    }
+
+    .example-separator::before {
+        left: 0;
+    }
+
+    .example-separator::after {
+        right: 0;
+    }
+
+    .icon {
+        width: 22px;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+
+    .phone-icon {
+        font-size: 1.7rem;
+        margin-bottom: 4px;
+        margin-top: -20px;
+    }
+
+    .subtitle {
+        font-size: 0.5rem;
+        opacity: 0.7;
+    }
+
+    .glpi-button {
+        display: flex;
+        flex-direction: column;   /* empile icône + texte */
+        align-items: center;
+        justify-content: center;
+
+        margin: 15px auto;
+        padding: 25px 30px;
+
+        font-size: 1.2rem;
+        font-weight: 500;
+
+        color: black;
+        text-decoration: none;
+
+        background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(59,130,246,0.25));
+
+        border-radius: 20px;
+
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+
+        transition: all 0.25s ease;
+    }
+
+    .glpi-button:hover {
+        transform: translateY(-5px) scale(1.04);
+
+        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+
+        background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(37,99,235,0.4));
+    }
+
+    .glpi-icon {
+        width: 60px;
+        margin-bottom: 10px;
+        transition: transform 0.2s;
+    }
+
+    .glpi-button:hover .glpi-icon {
+        transform: scale(1.1);
+    }
+
+    /* =========================
+       POLICE
+       ========================= */
+    @font-face {
+        font-family: "Kermit Light";
+        src: url("Kermit-Light.woff2") format("woff2"),
+             url("Kermit-Light.woff") format("woff");
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    :root {
+        --bg-main: #f8f8fb;
+        --bg-soft: #fcfcfe;
+        --text: #2a2a2a;
+        --muted: #666b75;
+        --white-glass: rgba(255,255,255,0.72);
+        --shadow: 0 18px 40px rgba(38, 45, 60, 0.10);
+
+        --yellow: rgba(245, 158, 11, 0.70);
+        --yellow-soft: rgba(245, 158, 11, 0.08);
+
+        --green: rgba(34, 197, 94, 0.70);
+        --green-soft: rgba(34, 197, 94, 0.08);
+
+        --red: rgba(239, 68, 68, 0.70);
+        --red-soft: rgba(239, 68, 68, 0.08);
+
+        --blue: rgba(59, 130, 246, 0.70);
+        --blue-soft: rgba(59, 130, 246, 0.08);
+
+        --radius-xl: 26px;
+        --radius-lg: 18px;
+        --radius-md: 14px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "Kermit Light", "Segoe UI", Arial, sans-serif;
+
+        background:
+            radial-gradient(circle at top left, rgba(217, 237, 255, 0.65), transparent 35%),
+            radial-gradient(circle at bottom right, rgba(255, 233, 214, 0.55), transparent 40%),
+            linear-gradient(180deg, #f9fafc 0%, #f6f7fb 100%);
+        color: var(--text);
+        padding: 44px 24px 60px;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+
+    /* =========================
+    FIGURE AVEC IMAGE VERTICALE
+    ========================= */
+    .background-ribbon {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .background-ribbon::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        width: 1500px;
+        height: 700px;
+
+        background-image: url("../background.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+
+        transform: translate(-50%, -50%) rotate(90deg);
+
+        opacity: 0.40;
+        filter: contrast(1.15) saturate(1.1);
+    }
+
+    /* =========================
+       HEADER
+       ========================= */
+    .header {
+        background: rgba(255,255,255,0.62);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.65);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        padding: 34px 28px;
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    .eyebrow {
+        font-size: 0.86rem;
+        text-transform: uppercase;
+        letter-spacing: 0.10em;
+        color: var(--muted);
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 2.15rem;
+        line-height: 1.2;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+    }
+
+    .meta {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        background: rgba(255,255,255,0.72);
+        content: "";
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 8px 20px rgba(31, 41, 55, 0.05);
+    }
+
+    /* =========================
+       INTRO
+       ========================= */
+    .intro {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        padding: 28px 32px;
+        margin-bottom: 28px;
+        text-align: center;
+    }
+
+    .intro h2 {
+        margin: 0 0 14px 0;
+        font-size: 1.28rem;
+        font-weight: 400;
+    }
+
+    .intro p {
+        margin: 0 auto 10px auto;
+        max-width: 860px;
+        font-size: 1rem;
+        line-height: 1.75;
+        color: var(--text);
+    }
+
+    .intro p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* =========================
+       GRID
+       ========================= */
+    .grid {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .card {
+        border-radius: var(--radius-lg);
+        padding: 26px 24px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(255,255,255,0.40);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        text-align: center;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 22px 48px rgba(38, 45, 60, 0.13);
+    }
+
+    .card h3 {
+        margin: 0 0 12px 0;
+        font-size: 1.18rem;
+        font-weight: 400;
+        text-align: center;
+    }
+
+    /* Phrase d’intro dans chaque bloc */
+    .lead {
+        margin: 0 0 18px 0;
+        font-size: 1rem;
+        line-height: 1.65;
+        font-weight: 600;
+        color: #1f2937;
+        text-align: center;
+    }
+
+    /* Liste lisible et reste centré */
+    .card ul {
+        list-style: none;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0;
+        text-align: left;
+    }
+
+    .card li {
+        position: relative;
+        margin: 10px 0;
+        padding: 10px 14px 10px 38px;
+        border-radius: 12px;
+        font-size: 0.99rem;
+        line-height: 1.6;
+        font-weight: 400;
+        color: var(--text);
+        background: rgba(255,255,255,0.28);
+    }
+
+    .card li::before {
+        content: "";
+        position: absolute;
+        left: 14px;
+        top: 17px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        opacity: 0.95;
+    }
+
+    .yellow li::before { background: var(--yellow); }
+    .green li::before  { background: var(--green); }
+    .red li::before    { background: var(--red); }
+    .blue li::before   { background: var(--blue); }
+
+    .yellow {
+        background: linear-gradient(180deg, rgba(255,255,255,0.78), var(--yellow-soft));
+        border-top: 4px solid var(--yellow);
+    }
+
+    .green {
+        background: linear-gradient(180deg, rgba(255,255,255,0.78), var(--green-soft));
+        border-top: 4px solid var(--green);
+    }
+
+    .red {
+        background: linear-gradient(180deg, rgba(255,255,255,0.78), var(--red-soft));
+        border-top: 4px solid var(--red);
+    }
+
+    .blue {
+        background: linear-gradient(180deg, rgba(255,255,255,0.78), var(--blue-soft));
+        border-top: 4px solid var(--blue);
+    }
+
+    .full {
+        grid-column: 1 / -1;
+    }
+
+    .valuered {
+        display: inline-block;
+        margin: 8px auto 14px auto;
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-size: 1rem;
+        font-weight: 400;
+        background: rgba(240, 133, 133, 0.52);
+        border: 1px solid rgba(0,0,0,0.04);
+        border-left: 4px solid rgba(239,68,68,0.7);
+        text-align: center;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+        backdrop-filter: blur(4px);
+        transition: all 0.2s ease;
+    }
+
+    .valuegreen {
+        display: inline-block;
+        margin: 8px auto 14px auto;
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-size: 1rem;
+        font-weight: 400;
+        background: rgba(133, 240, 178, 0.52);
+        border: 1px solid rgba(0,0,0,0.04);
+        border-left: 4px solid rgba(2, 252, 23, 0.7);
+        text-align: center;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+        backdrop-filter: blur(4px);
+        transition: all 0.2s ease;
+    }
+
+    .valuered:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.1);
+    }
+
+    .valuegreen:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.1);
+    }
+
+    .support-note {
+        margin-top: 16px;
+        font-size: 1rem;
+        line-height: 1.8;
+        font-weight: 400;
+        text-align: center;
+    }
+
+    @media (max-width: 900px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .full {
+            grid-column: auto;
+        }
+
+        h1 {
+            font-size: 1.85rem;
+        }
+    }
+
+    @media print {
+        body {
+            padding: 18px;
+            background: white;
+        }
+
+        .background-ribbon::before,
+        .background-ribbon::after {
+            opacity: 0.45;
+            filter: blur(0);
+        }
+
+        .header,
+        .intro,
+        .card {
+            box-shadow: none;
+        }
+    }
+
+    /* CAPTURE */
+    .screenshot {
+        width: 100%;
+        max-width: 750px;
+        display: block;
+        margin: 15px auto;
+        border-radius: 14px;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .screenshot:hover {
+        transform: scale(1.02);
+    }
+
+    /* LEGENDE */
+    .legend {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .overlay img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 12px;
+    }
+</style>
+</head>
+<body>
+
+<div class="background-ribbon"></div>
+
+<div class="container">
+
+    <section class="header">
+        <div class="eyebrow">Procédure IT</div>
+        <h1>📅 Créer un sondage de disponibilité dans Outlook</h1>
+
+        <div class="meta">
+            <div class="badge">👤 Public cible : Utilisateur</div>
+            <div class="badge">🏷️ Catégorie : Messagerie et collaboration</div>
+        </div>
+    </section>
+
+    <section class="intro">
+        <h2>📝 Introduction et but de la procédure</h2>
+        <p><strong>Objectif :</strong> cette procédure permet de créer une demande de disponibilité auprès d’un public défini, via Outlook, dans le cadre de la planification d’une réunion.</p>
+        <p><strong>Pourquoi c’est important :</strong> le sondage de disponibilité facilite l’organisation des réunions en permettant d’identifier rapidement les créneaux qui conviennent aux participants.</p>
+    </section>
+
+    <section class="grid">
+
+        <article class="card yellow">
+            <h3>✉️ Démarrer la demande</h3>
+            <p class="lead">Commencez la préparation du sondage directement dans Outlook.</p>
+            <ul>
+                <li>Créer un nouveau message, courrier, rendez-vous ou évènement</li>
+                <li>Ajouter les destinataires principaux et en copie</li>
+                <li>Cliquer sur « Nouveau sondage de disponibilité »</li>
+            </ul>
+        </article>
+
+        <article class="card green">
+            <h3>✅ Sélectionner les créneaux</h3>
+            <p class="lead">Choisissez plusieurs horaires qui conviennent aux destinataires.</p>
+            <ul>
+                <li>Sélectionner des horaires sur une ou plusieurs dates</li>
+                <li>Choisir les créneaux adaptés à tous les participants</li>
+                <li>Cliquer sur « Suivant » pour valider la sélection</li>
+            </ul>
+        </article>
+
+        <article class="card red">
+            <h3>📍 Paramétrer la réunion</h3>
+            <p class="lead">Adaptez les options avant de créer le sondage.</p>
+            <ul>
+                <li>Si la réunion est en présentiel, décocher « Réunion Teams »</li>
+                <li>Choisir un emplacement pour la réunion si nécessaire</li>
+                <li>Vérifier les horaires sélectionnés avant la création</li>
+                <li>Cliquer sur « Créer un sondage »</li>
+                <li>Envoyer le message aux destinataires</li>
+            </ul>
+        </article>
+
+        <article class="card blue">
+            <h3>⚠️ Exemple concret</h3>
+            <p class="lead">Après la sélection des créneaux, Outlook affiche un récapitulatif avant la création du sondage.</p>
+            <div class="valuegreen">Exemple : 3 créneaux sélectionnés</div><br>
+            <div class="valuered">Point d’attention : désactiver « Réunion Teams » si la réunion est en présentiel</div>
+
+            <div class="example-separator">
+                🔽 Exemple dans Outlook 🔽
+            </div>
+
+            <!-- IMAGE -->
+            <p class="legend">📌 Exemple de configuration du sondage de disponibilité</p>
+            <img src="sondage-disponibilite.png" class="screenshot" onclick="zoomImage(this.src)" alt="Exemple de configuration du sondage de disponibilité dans Outlook">
+
+            <p>
+                Une fois les horaires choisis, vous pouvez vérifier les options proposées, puis créer le sondage afin qu’il soit envoyé aux participants.
+            </p>
+        </article>
+
+        <article class="card blue full">
+            <h3>🆘 Finaliser et envoyer le sondage</h3>
+            <p class="lead">Une fois le sondage créé, les destinataires reçoivent un message leur permettant de voter pour les créneaux proposés.</p>
+            <ul>
+                <li>Cliquer sur « Créer un sondage » après vérification des horaires</li>
+                <li>Cliquer sur « Envoyer » pour transmettre la demande aux destinataires</li>
+                <li>Les participants reçoivent un e-mail avec les options de temps proposées</li>
+                <li>Utiliser les réponses du sondage pour choisir le meilleur créneau</li>
+            </ul>
+
+            <!-- IMAGE -->
+            <img src="sondage-envoi.png" class="screenshot" onclick="zoomImage(this.src)" alt="Exemple de message envoyé avec le sondage de disponibilité">
+        </article>
+
+        <article class="card contact">
+
+            <h3>Votre problème n’est pas résolu ?</h3>
+
+            <p class="lead">
+                Si la procédure ne répond pas à votre besoin, vous pouvez contacter le service informatique :
+            </p>
+
+            <div class="contact-actions">
+
+                <!-- GLPI -->
+                <a href="https://glpi.stgilles.brussels" target="_blank" class="glpi-button">
+                    <img src="../glpi.png" class="glpi-icon" alt="GLPI">
+                    <span>Ticket GLPI</span>
+                </a>
+
+                <!-- TELEPHONE -->
+                <a href="tel:025361700" class="glpi-button">
+                    <span class="phone-icon">📞</span>
+                    <span>Appeler le Helpdesk</span>
+                    <span class="subtitle">02 536 17 00</span>
+                </a>
+
+            </div>
+
+            <p class="support-note">
+                Vidéo explicative :
+                <a href="https://www.youtube.com/watch?v=hpOQBiyhuSU" target="_blank">
+                    Outlook 365: comment utiliser les sondages de planification ?
+                </a>
+            </p>
+
+        </article>
+
+    </section>
+
+</div> <!-- container -->
+
+<!-- OVERLAY POUR LE ZOOM -->
+<div id="overlay" class="overlay" onclick="closeZoom()">
+    <img id="overlay-img" alt="Zoom capture">
+</div>
+
+<script>
+function zoomImage(src){
+    document.getElementById("overlay").style.display = "flex";
+    document.getElementById("overlay-img").src = src;
+}
+
+function closeZoom(){
+    document.getElementById("overlay").style.display = "none";
+}
+</script>
+
+</body>
+</html>
